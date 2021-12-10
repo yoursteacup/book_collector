@@ -1,0 +1,7 @@
+{
+	"www.tutorialspoint.com": {
+		"title":"//h1[@class='qa_title']",
+		"content":"//div.mui-col-md-6.tutorial-content",
+		"next_button":"//div.nxt-btn > a"
+	}
+}
