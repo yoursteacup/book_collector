@@ -1,7 +1,13 @@
 {
-	"www.tutorialspoint.com": {
-		"title":"//h1[@class='qa_title']",
-		"content":"//div.mui-col-md-6.tutorial-content",
-		"next_button":"//div.nxt-btn > a"
+	"loveread.me": {
+		"title":"//div[@class='take_h1']",
+		"content":"//p[@class='MsoNormal']",
+		"navigation":{
+			"type":"pages",
+			"element":"//div[@class='navigation']/a"
+		},
+		"page_number":"//span[@class='current']",
+		"description":"//div[@class='descriptionBook']",
+		"book_link":"//div[@class='openBook']/a"
 	}
 }
