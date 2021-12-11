@@ -1,6 +1,6 @@
 {
 	"loveread.me": {
-		"title":"//div[@class='take_h1']",
+		"title":"//div[@id='main']/h1",
 		"content":"//p[@class='MsoNormal']",
 		"navigation":{
 			"type":"pages",

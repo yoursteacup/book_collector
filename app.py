@@ -1,11 +1,13 @@
 import requests
 import json
 import time
+import logging
 from random import randint
 from lxml import etree, html
 from urllib.parse import urlparse
 from fp.fp import FreeProxy
 
+logging.getLogger("requests").setLevel(logging.CRITICAL)
 parser = etree.HTMLParser()
 sources_prefs = json.load(open("sources.json", "r"))
 user_agents = json.load(open("user_agents.json", "r"))["user_agents"]
@@ -90,7 +92,6 @@ def getBook(url):
 						else:
 							url = page
 						pages_fetched.append(url)
-						print(f"URL: {url}")
 						fetched_page = fetchPage(url, headers, proxies)
 						tree = html.fromstring(fetched_page.content)
 						for element in tree.xpath(navigation_button):
@@ -123,5 +124,5 @@ def writeBook(book):
 		openedBook.close()
 
 if __name__ == "__main__":
-	url = "http://loveread.me/read_book.php?id=4333&p=1"
+	url = "http://loveread.me/read_book.php?id=4370&p=1"
 	writeBook(getBook(url))
