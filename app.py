@@ -2,6 +2,7 @@ import requests
 import json
 import time
 import logging
+import os
 from random import randint
 from lxml import etree, html
 from urllib.parse import urlparse
@@ -116,6 +117,8 @@ def getBook(url):
 		return None
 
 def writeBook(book):
+	if not os.path.exists(os.path.dirname("/books/")):
+		os.makedirs(os.path.dirname("/books/"))
 	with open(f"{book['title']}.txt", "a", encoding = "utf-8") as openedBook: 
 		for x in range(book["page_count"] + 1):
 			for page in book["pages"]:
