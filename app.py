@@ -1,14 +1,12 @@
 import requests
 import json
 import time
-import logging
 import os
 from random import randint
 from lxml import etree, html
 from urllib.parse import urlparse
 from fp.fp import FreeProxy
 
-logging.getLogger("requests").setLevel(logging.CRITICAL)
 parser = etree.HTMLParser()
 sources_prefs = json.load(open("sources.json", "r"))
 user_agents = json.load(open("user_agents.json", "r"))["user_agents"]
@@ -18,6 +16,8 @@ headers = {
 	"Accept-Language": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7"
 }
 no_proxy_response = "There are no working proxies at this time."
+proxy_getting_timeout = 1
+page_downloading_timeout = 0.25
 
 def getProxy():
 	proxies = {}
@@ -26,7 +26,7 @@ def getProxy():
 		proxy = FreeProxy(rand=True).get()
 		if proxy == no_proxy_response:
 			print("No proxy returned. Sleeping for 1 second...")
-			time.sleep(1)
+			time.sleep(proxy_getting_timeout)
 	print(f"Fetching with proxy: {proxy}")
 	proxies["http"] = proxy
 	return proxies
@@ -36,7 +36,7 @@ def getPage(fetched_page, content_element, page_number_element):
 	page = {}
 	text = ""
 	for element in tree.xpath(content_element):
-		text += element.text_content()
+		text += element.text_content() + '\n'
 	page[tree.xpath(page_number_element)[0].text_content()] = text
 	return page
 
@@ -87,7 +87,7 @@ def getBook(url):
 			while bookNotReady(pages_got, pages_fetched):
 				for page in pages_got:
 					if page not in pages_fetched:
-						time.sleep(1)
+						time.sleep(page_downloading_timeout)
 						if f"http://{domain}" not in page:
 							url = f"http://{domain}/{page}"
 						else:
@@ -119,7 +119,8 @@ def getBook(url):
 def writeBook(book):
 	if not os.path.exists(os.path.dirname("/books/")):
 		os.makedirs(os.path.dirname("/books/"))
-	with open(f"{book['title']}.txt", "a", encoding = "utf-8") as openedBook: 
+	with open(f"./books/{book['title']}.txt", "a", encoding = "utf-8") as openedBook:
+		# print(os.path.realpath(openedBook.name))
 		for x in range(book["page_count"] + 1):
 			for page in book["pages"]:
 				if str(x) in page:
@@ -127,5 +128,13 @@ def writeBook(book):
 		openedBook.close()
 
 if __name__ == "__main__":
-	url = "http://loveread.me/read_book.php?id=4370&p=1"
+	url = "http://loveread.me/read_book.php?id=68214&p=1"
 	writeBook(getBook(url))
+	
+	# TESTING
+	#
+	# book = {}
+	# book["title"] = "Book title"
+	# book["pages"] = [{'1': "lala"}, {'2': "topola"}]
+	# book["page_count"] = 2
+	# writeBook(book)
