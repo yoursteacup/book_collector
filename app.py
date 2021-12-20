@@ -128,7 +128,7 @@ def writeBook(book):
 		openedBook.close()
 
 if __name__ == "__main__":
-	url = "http://loveread.me/read_book.php?id=68214&p=1"
+	url = "http://loveread.me/read_book.php?id=4370&p=1"
 	writeBook(getBook(url))
 	
 	# TESTING
